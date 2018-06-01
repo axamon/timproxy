@@ -49,7 +49,6 @@ to quickly create a Cobra application.`,
 
 		fmt.Printf("Inserisci password aziendale (non verrà mostrata a video): ")
 
-		// Silent. For printing *'s use gopass.GetPasswdMasked()
 		pass, err := gopass.GetPasswd()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
@@ -62,6 +61,7 @@ to quickly create a Cobra application.`,
 		fmt.Println("Ora puoi lanciare 'timproxy on' per avviare un terminale con proxy attivo.")
 		viper.Set("passcriptata", passcriptata)
 		viper.Set("proxy", "@lelapomi.telecomitlaia.it:8080")
+		viper.Set("cmdpath", "C:\\Windows\\System32\\cmd.exe")
 		viper.WriteConfigAs("config.yaml")
 
 	},

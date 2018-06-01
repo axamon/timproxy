@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/spf13/viper"
 
@@ -43,7 +44,7 @@ var onCmd = &cobra.Command{
 		passwordaziendale := cripta.Decifra(viper.GetString("passcriptata"), "")
 		//fmt.Println(result) //Debug
 		matricola := viper.GetString("matricola")
-		fmt.Println(matricola)
+		//fmt.Println(matricola) //Debug
 		host := viper.GetString("proxy")
 
 		httpproxy := "http://" + matricola + ":" + passwordaziendale + host
@@ -52,13 +53,14 @@ var onCmd = &cobra.Command{
 		os.Setenv("HTTP_PROXY", httpproxy)
 		os.Setenv("HTTPS_PROXY", httpsproxy)
 
+		cmdpath := viper.GetString("cmdpath")
 		cmdshell := exec.Command(cmdpath, "/C", "start", cmdpath)
 		errshell := cmdshell.Start()
 		if errshell != nil {
-			fmt.Fprintln(os.Stderr, errshell.Error())
+			fmt.Fprintln(os.Stderr, "Error", errshell.Error())
 		}
 
-		fmt.Println(httpproxy, httpsproxy)
+		//fmt.Println(httpproxy, httpsproxy) //Debug
 		//fmt.Println("on called")
 	},
 }
@@ -71,11 +73,6 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// onCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// onCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
