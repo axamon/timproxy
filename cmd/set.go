@@ -30,7 +30,7 @@ import (
 // setCmd represents the set command
 var setCmd = &cobra.Command{
 	Use:   "set",
-	Short: "A brief description of your command",
+	Short: "imposta matricola e password da usare per il proxy",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -43,7 +43,10 @@ to quickly create a Cobra application.`,
 		text := bufio.NewReader(os.Stdin)
 		matricola, _ := text.ReadString('\n')
 		//fmt.Println(matricola) //debug
+
+		//Togli \n se stai su linux e togli \r se stai su winzozz, io li tolgo entrambi
 		matricola = strings.TrimSuffix(matricola, "\n")
+		matricola = strings.TrimSuffix(matricola, "\r")
 
 		viper.Set("matricola", matricola)
 
@@ -57,12 +60,17 @@ to quickly create a Cobra application.`,
 		passcriptata := cripta.Cifra(string(pass), "")
 		//fmt.Println(passcriptata) //Debug
 
-		fmt.Println("Informazioni salvate nel file config.yaml")
-		fmt.Println("Ora puoi lanciare 'timproxy on' per avviare un terminale con proxy attivo.")
 		viper.Set("passcriptata", passcriptata)
 		viper.Set("proxy", "@lelapomi.telecomitlaia.it:8080")
 		viper.Set("cmdpath", "C:\\Windows\\System32\\cmd.exe")
-		viper.WriteConfigAs("config.yaml")
+		errsave := viper.WriteConfigAs("config.yaml")
+		if errsave != nil {
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
+		}
+
+		fmt.Println("Informazioni salvate nel file config.yaml")
+		fmt.Println("Ora puoi lanciare 'timproxy on' per avviare un terminale con proxy attivo.")
 
 	},
 }
